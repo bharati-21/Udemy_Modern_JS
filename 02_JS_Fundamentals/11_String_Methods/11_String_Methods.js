@@ -52,7 +52,7 @@ console.log(firstName.charAt(firstName.length - 1));
 console.log(firstName.substring(0, 4));
 
 // slice
-console.log(firstName.slice(0, 3));
+console.log(firstName.slice(0, 4));
 console.log(firstName.slice(-3, 3));
 
 // split
@@ -63,5 +63,5 @@ console.log("Hello there! My name is Bharati".split(" "));
 console.log("Hello there! My name is Bharati".replace('Bharati', 'John'));
 
 // includes()
-console.log("Hello there!".includes("foo"));
-console.log("Hello there!".includes("Hello"));
+console.log("Hello there! My name is Bharati".includes("foo"));
+console.log("Hello there!".includes("Hel"));
