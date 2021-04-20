@@ -30,3 +30,6 @@ Person.prototype.getsMarried = function (newLastName) {
 john.getsMarried('Smith');
 console.log(john.calculateAge());
 console.log(john.getFullName());
+
+console.log(john.hasOwnProperty('firstName'));
+console.log(john.hasOwnProperty('gerFullName'));
