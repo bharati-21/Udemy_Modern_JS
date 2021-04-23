@@ -20,8 +20,8 @@ const returnHello = () => "Hello";
 console.log(returnHello());
 
 // Return Object
-const returnObject = () => {{msg: 'Hello'}};
-console.log(returnObject);
+const returnObject = () => ({msg: 'Hello'});
+console.log(returnObject());
 
 // Single Param does not need Parenthesis
 const helloName = name => console.log(`Hello ${name}`);
