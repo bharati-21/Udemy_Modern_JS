@@ -34,8 +34,24 @@ re = /Hel{2,}o/i;   // Must occur at least m times
 // Parenthesis () - Grouping
 re = /([0-9]x){3}$/;
 
+// Shorthand Character Classes
+re = /\w/;          // word character: alpha numeric character or _
+re = /\w+/;         // +: One or more word characters
+re = /\W/;          // Non word characters
+re = /\d/;          // Match any Digit
+re = /\d+/;         // Match any Digit 0 or more times
+re = /\D/;         // Match non digit
+re = /\s/;         // Match white space character
+re = /\S/;         // Match non white space character
+re = /Hell\b/i;     // Word Boundary
+
+// Assertions
+re = /x(?=y)/;      // Match x only if it's followed by y
+re = /x(?!y)/;     // Match x only if it's not followed by y
+
+
 // String to match
-const str = '1x1x1x';
+const str = 'sffhdf5yx';
 
 // Log results
 const result = re.exec(str);
