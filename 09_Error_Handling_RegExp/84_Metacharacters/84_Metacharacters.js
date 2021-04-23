@@ -15,9 +15,27 @@ re = /gre?a?y/i;    // Optional character (Matches gry as well)
 re = /gre?a?y\?/i;
 
 
+// Character Sets
+// Brackets [] - Character sets
+re = /gr[ae]y/i;    // Must be one of the characters inside []
+re = /[GF]ray/;     // Must be G or F 
+re = /[^GF]ray/i;   // Match anything except the characters inside []
+re = /[A-Z]ray/;    // Match any uppercase
+re = /[a-z]ray/;    // Match any uppercase
+re = /[A-Za-z]ray/;    // Match any uppercase
+re = /[0-9]ray/;
+
+// Braces {} - Quantifiers
+re = /Hel{2}o/i;    // Must occur exactly m number of times
+re = /Hel{2,4}o/i;  // Must occur at least m times and at most n times
+re = /Hel{2,}o/i;   // Must occur at least m times
+
+
+// Parenthesis () - Grouping
+re = /([0-9]x){3}$/;
 
 // String to match
-const str = 'Hello World';
+const str = '1x1x1x';
 
 // Log results
 const result = re.exec(str);
