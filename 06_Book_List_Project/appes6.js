@@ -48,6 +48,51 @@ class UI {
     }
 }
 
+// Local Storage Class
+class Store {
+    static getBooksFromLocalStorage() {
+        let books;
+        if (localStorage.getItem('books') === null) {
+            books = [];
+        }
+        else {
+            books = JSON.parse(localStorage.getItem('books'));
+        }
+        return books;
+    }
+
+    static removeBookFromLocalStorage(isbn) {
+        if (isbn !== null) {
+            
+            console.log(isbn);
+            const books = Store.getBooksFromLocalStorage();
+            books.forEach((book, index) => {
+                if (book.isbn === isbn) {
+                    books.splice(index, 1);
+                }
+            });
+            localStorage.setItem('books', JSON.stringify(books));
+        }
+    }
+
+    static displayBooksFromStorage() {
+        const books = Store.getBooksFromLocalStorage();
+        const ui = new UI();
+        books.forEach((book) => {
+            ui.addBookToList(book);
+        });
+    }
+
+    static addBookToLocalStorage(book) {
+        const books = Store.getBooksFromLocalStorage();
+        books.push(book);
+
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', Store.displayBooksFromStorage());
+
 // Event Listener
 document.getElementById('book-form').addEventListener('submit',
     function (e) {
@@ -60,12 +105,11 @@ document.getElementById('book-form').addEventListener('submit',
 
         // Instantiate Book
         const book = new Book(title, author, isbn);
-        console.log(book);
-
+        
         // Instantiate UI object
         const ui = new UI();
         // console.log(ui);
-
+        
         // Validate
         if(title === '' || author === '' || isbn === '') {
             // Error alert
@@ -74,6 +118,9 @@ document.getElementById('book-form').addEventListener('submit',
         else {
             // Add book to list
             ui.addBookToList(book);
+            console.log(book);
+
+            Store.addBookToLocalStorage(book);
             
             // clear fields
             ui.clearFields();
@@ -90,5 +137,13 @@ document.querySelector('#book-list').addEventListener('click',
         const ui = new UI();
         ui.deleteBook(e.target);
 
-        ui.showAlert('Book removed Successfully!', 'success');
+
+        // Remove from local storage
+        // Store.removeBookFromLocalStorage(e.target.parentElement.parentElement.children[2].textContent);
+
+        if (e.target !== null && e.target.parentElement !== null && e.target.parentElement.previousElementSibling !== null) {
+            Store.removeBookFromLocalStorage(e.target.parentElement.previousElementSibling.textContent);
+            ui.showAlert('Book removed Successfully!', 'success');
+
+        }
     });
