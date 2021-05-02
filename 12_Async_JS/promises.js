@@ -41,6 +41,17 @@ function createPost(post) {
 }
 
 
-createPost({ title: 'Post 4', body: 'This is Post 4' })
-    .then(getPosts)
-    .catch(err => document.body.innerHTML = err);
+// createPost({ title: 'Post 4', body: 'This is Post 4' })
+//     .then(getPosts, err => document.body.innerHTML = err);
+
+// Prmoise.all
+
+const promise1 = Promise.resolve('Hello World');
+const promise2 = 10;
+const promise3 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 2000, 'Goodbye');
+});
+
+const promise4 = fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json());
+
+Promise.all([promise1, promise2, promise3, promise4]).then((values) => console.log(values));
