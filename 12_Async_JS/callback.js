@@ -5,6 +5,36 @@ const posts = [
 ];
 
 /* SYNCHRONOUS CODE */
+// function getPosts() {
+//     setTimeout(() => {
+//         let output = '';
+//         posts.forEach((post) => {
+//             output += `
+//                 <ul>
+//                     <li>${post.title}</li>
+//                     <li>${post.body}</li>
+//                 </ul>`;
+
+//         });
+//         document.body.innerHTML = output;
+
+//     }, 1000);
+// }
+
+// function createPost(post) {
+//     setTimeout(() => {
+//         posts.push(post);
+//     }, 2000);
+// }
+
+// getPosts();
+// createPost({ title: 'Post 4', body: 'This is Post 4' });
+
+
+/* ********************************************************** */
+
+
+/* ASYNCHRONOUS CODE WITH CALLBACKS */
 function getPosts() {
     setTimeout(() => {
         let output = '';
@@ -21,12 +51,13 @@ function getPosts() {
     }, 1000);
 }
 
-function createPost(post) {
+
+function createPost(post, callBack) {
     setTimeout(() => {
         posts.push(post);
+        callBack();
     }, 2000);
 }
 
-getPosts();
-createPost({ title: 'Post 4', body: 'This is Post 4' });
 
+createPost({ title: 'Post 4', body: 'This is Post 4' },     getPosts);
