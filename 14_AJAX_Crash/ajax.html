@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AJAX 1 - Text File</title>
+    </head>
+    <body>
+        <div id="text"></div>
+        <button id="btn">Get Text File</button>
+        <script>
+            // create event listener
+            document.getElementById('btn').addEventListener('click', loadText);
+            function loadText(e) {
+                e.preventDefault();
+                // console.log('Button Clicked');
+
+                // Create XHR Object
+                const xhr = new XMLHttpRequest();
+                console.log(xhr);
+
+                // Open - Type, URL/File name, Asynchronous
+                xhr.open('GET', 'sample2.txt', true);
+                console.log(xhr.readyState);
+
+                // OPTIONAL: Used for loader
+                xhr.onprogress = function() {
+                    console.log(this.readyState); // At 3
+                }
+
+                // onload() (or old way: onreadystatechange)
+                xhr.onload = function() {
+                        console.log(xhr.readyState); // Already at 4
+                        if(this.status === 200) {
+                            console.log(this.responseText);
+                            document.getElementById('text').innerHTML = this.responseText + '<br> <br/>';
+                        }
+                        else if(this.status === 404) {
+                            document.getElementById('text').innerHTML = 'Not found <br /> <br/>';
+                        }
+                }
+
+
+                // onerror : In case the request/ repsonse goes wrong
+                xhr.onerror = function() {
+                    console.log(this.status, "Request Error..");
+                }
+
+                // Sends request
+                xhr.send();
+            }
+
+            /* 
+                onload() doesn't run until readyState is 4 (that is when request has been processed and response is ready state)
+            */
+
+            // function loadText(e) {
+            //     e.preventDefault();
+
+            //     const xhr = new XMLHttpRequest();
+            //     console.log(xhr);
+
+            //     xhr.open('GET', 'sample.txt', true);
+            //     console.log("Ready State:", xhr.readyState); // state = 1
+
+            //     // onload() (or old way: onreadystatechange)
+            //     xhr.onreadystatechange = function() {
+            //         console.log("Ready State:", xhr.readyState); // state goes through 1-4
+            //         if(this.readyState == 4 && this.status == 200) {
+            //             console.log(this.responseText);
+            //         }
+            //     }
+
+            //     // Sends request
+            //     xhr.send();
+            // }
+        </script>
+    </body>
+</html>
