@@ -34,4 +34,34 @@ class UI {
             <div id="repos"></div>
         `;
     }
+
+    clearProfile() {
+        this.profile.innerHTML = '';
+    }
+
+    // Show alert if username not found
+    showAlert(msg, className) {
+        this.clearAlertMessage();
+
+
+        const div = document.createElement('div');
+        div.className = className;
+        div.appendChild(document.createTextNode(msg));
+
+        const parent = document.querySelector('.searchContainer');
+        const search = document.querySelector('.search');
+
+        parent.insertBefore(div, search);
+
+        setTimeout( () => {
+            this.clearAlertMessage();
+        }, 3000);
+    }
+
+    clearAlertMessage() {
+        const currentAlert = document.querySelector('.alert');
+        if (currentAlert) {
+            currentAlert.remove();
+        }
+    }
 }
