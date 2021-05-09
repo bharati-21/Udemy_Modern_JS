@@ -1,4 +1,5 @@
-const weather = new Weather('Delhi');
+const weather = new Weather('London');
+const ui = new UI();
 
 // weather.changeLocation('Varanasi');
 document.addEventListener('DOMContentLoaded',getWeather )
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded',getWeather )
 function getWeather() {
     weather.getWeather(weather)
         .then((response) => {
-            console.log(response);
+            ui.paint(response);
         })
         .catch((err) => {
             console.log(err);
