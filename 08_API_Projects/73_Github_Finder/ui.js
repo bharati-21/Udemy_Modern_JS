@@ -35,6 +35,28 @@ class UI {
         `;
     }
 
+    showRepos(repos) {
+        let op = '';
+        repos.forEach((repo) => {
+            op += `
+                <div class="card card-body mb-2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="${repo.html_url} target="_blank">${repo.name}</a>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-primary my-2">Stars: ${repo.stargazers_count}</span>
+                            <span class="badge bg-secondary my-2">Watchers: ${repo.watchers_count}</span>
+                            <span class="badge bg-success my-2">Forks: ${repo.forks_count}</span>
+                            </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('repos').innerHTML = op;
+    }
+
     clearProfile() {
         this.profile.innerHTML = '';
     }
