@@ -49,7 +49,7 @@ const ItemController = (function () {
         // Add to items array
         data.items.push(newItem);
 
-        return newItem;
+        return newItem;  
     }
 
     return {
@@ -94,6 +94,21 @@ const ItemController = (function () {
 
         getCurrentItem: function() {
             return data.currentItem;
+        },
+
+        updateItem: function (input) {
+            const updatedName = input.itemName;
+            const updatedCalorie = parseInt(input.itemCalorie);
+
+            let found = null;
+            data.items.forEach((item) => {
+                if (item.id === data.currentItem.id) {
+                    item.name = updatedName;
+                    item.calories = updatedCalorie;
+                    found = item;
+                }
+            });
+            return found;
         }
     }
 })();
@@ -110,7 +125,7 @@ const UIController = (function () {
         totalCalories: '.total-calories',
         updateBtn: '.update-btn',
         deleteBtn: '.delete-btn',
-        collectionItem: '.collection-item',
+        listItems: '#item-list li',
         editItem: '.edit-item'
     };
 
@@ -222,7 +237,27 @@ const UIController = (function () {
         addEditItemToForm: function () {
             document.querySelector(UISelectors.itemNameInput).value = ItemController.getCurrentItem().name;
             document.querySelector(UISelectors.itemCalorieInput).value = ItemController.getCurrentItem().calories;
-        }
+        },
+
+        updateListItem: function (updatedItem) {
+            let listItems = document.querySelectorAll(UISelectors.listItems);
+
+            console.log(listItems);
+
+            
+            // Turn Node List to array
+            listItems = Array.from(listItems);
+            listItems.forEach((item) => {
+                if (item.getAttribute('id') === `item-${updatedItem.id}`) {
+                    document.querySelector(`#${item.id}`).innerHTML = `
+                        <strong>${updatedItem.name}: </strong> <em>${updatedItem.calories} calories</em>
+                        <a href="#" class="secondary-content">
+                            <i class="edit-item fas fa-pencil-alt"></i>
+                        </a>
+                    `;
+                }
+            });
+        }   
     }
 })();
 
@@ -236,8 +271,19 @@ const AppController = (function (ItemController, UIController) {
         // Add item event
         document.querySelector(UISelectors.addBtn).addEventListener('click', addItem);
 
+        // Disable submit on enter
+        document.addEventListener('keypress', function (e) {
+            if (e.code === "Enter") {
+                e.preventDefault();
+                return false;
+            }
+        })
+
         // Update items (edit state) when pencil clicked
-        document.querySelector(UISelectors.itemList).addEventListener('click', updateItem);
+        document.querySelector(UISelectors.itemList).addEventListener('click', updateItemClick);
+
+        // Update item submit
+        document.querySelector(UISelectors.updateBtn).addEventListener('click', itemUpdateSubmit);
     }
 
     const addItem = function (e) {
@@ -265,7 +311,7 @@ const AppController = (function (ItemController, UIController) {
         }
     }
 
-    const updateItem = function (e) {
+    const updateItemClick = function (e) {
         e.preventDefault();
         const UISelectors = UIController.getSelectors();
 
@@ -285,6 +331,22 @@ const AppController = (function (ItemController, UIController) {
                 UIController.addEditItemToForm();
             }
         }
+    }
+
+    const itemUpdateSubmit = function (e) {
+        e.preventDefault();
+        // console.log('Update submit');
+
+        const input = UIController.getItemInput();
+        const updatedItem = ItemController.updateItem(input);
+        // UIController.setCurrentItem(updatedItem);
+
+        UIController.updateListItem(updatedItem);
+        
+        const totalCalories = ItemController.getTotalCalories();
+        UIController.showTotalCalories(totalCalories);
+
+        UIController.clearEditState();
     }
 
     return {
