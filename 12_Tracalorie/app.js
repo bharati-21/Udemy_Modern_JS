@@ -109,6 +109,22 @@ const ItemController = (function () {
                 }
             });
             return found;
+        },
+
+        deleteItem: function (id) {
+            ids = data.items.map((item) => {
+                return item.id;
+            });
+
+            // Get index
+            const index = ids.indexOf(id);
+
+            // Remove item
+            data.items.splice(index, 1);
+        },
+
+        deleteAllItems: function() {
+            data.items = [];
         }
     }
 })();
@@ -126,7 +142,8 @@ const UIController = (function () {
         updateBtn: '.update-btn',
         deleteBtn: '.delete-btn',
         listItems: '#item-list li',
-        editItem: '.edit-item'
+        editItem: '.edit-item',
+        clearBtn: '.clear-btn'
     };
 
     // Load items on to the list
@@ -242,7 +259,7 @@ const UIController = (function () {
         updateListItem: function (updatedItem) {
             let listItems = document.querySelectorAll(UISelectors.listItems);
 
-            console.log(listItems);
+            // console.log(listItems);
 
             
             // Turn Node List to array
@@ -257,7 +274,23 @@ const UIController = (function () {
                     `;
                 }
             });
-        }   
+        },
+
+        removeListItem: function (id) {
+            const itemID = `#item-${id}`;
+            const item = document.querySelector(itemID);
+            item.remove();
+        },
+
+        removeAllListItems: function () {
+            // document.querySelector(UISelectors.itemList).innerHTML = '';
+
+            const items = document.querySelectorAll(UISelectors.listItems);
+
+            items.forEach((item) => {
+                item.remove();
+            });
+        }
     }
 })();
 
@@ -284,6 +317,18 @@ const AppController = (function (ItemController, UIController) {
 
         // Update item submit
         document.querySelector(UISelectors.updateBtn).addEventListener('click', itemUpdateSubmit);
+
+        // Back button submit
+        document.querySelector(UISelectors.backBtn).addEventListener('click', function (e) {
+            e.preventDefault();
+            UIController.clearEditState();
+        });
+
+        // Delete button submit
+        document.querySelector(UISelectors.deleteBtn).addEventListener('click', itemDeleteSubmit);
+
+        // Clear All Button
+        document.querySelector(UISelectors.clearBtn).addEventListener('click', clearAllSubmit);
     }
 
     const addItem = function (e) {
@@ -347,6 +392,35 @@ const AppController = (function (ItemController, UIController) {
         UIController.showTotalCalories(totalCalories);
 
         UIController.clearEditState();
+    }
+
+    const itemDeleteSubmit = function (e) {
+        e.preventDefault();
+
+        const currItem = ItemController.getCurrentItem();
+        const currItemId = currItem.id;
+
+        ItemController.deleteItem(currItemId);
+        // console.log(currItemId);
+        UIController.removeListItem(currItemId);
+
+        const totalCalories = ItemController.getTotalCalories();
+        UIController.showTotalCalories(totalCalories);
+
+        UIController.clearEditState();
+    }
+
+    const clearAllSubmit = function(e) {
+        ItemController.deleteAllItems();
+        UIController.removeAllListItems();
+
+        const totalCalories = ItemController.getTotalCalories();
+        UIController.showTotalCalories(totalCalories);
+
+        // Clear the input
+        UIController.clearInput();
+        
+        UIController.hideList();
     }
 
     return {
