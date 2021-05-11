@@ -34,7 +34,7 @@ const ItemController = (function () {
         let id;
         // Create id
         if (data.items.length > 0) {
-            id = data.items.length - 1;
+            id = data.items.length;
         }
         else {
             id = 0;
@@ -75,6 +75,25 @@ const ItemController = (function () {
             });
             data.totalCalories = total;
             return data.totalCalories;
+        },
+        getItemById: function (id) {
+            let found = null;
+
+            data.items.forEach((item) => {
+                if (item.id === id) {
+                    found = item;
+                }
+            });
+
+            return found;
+        },
+
+        setCurrentItem: function (currentItem) {
+            data.currentItem = currentItem;
+        },
+
+        getCurrentItem: function() {
+            return data.currentItem;
         }
     }
 })();
@@ -88,7 +107,11 @@ const UIController = (function () {
         backBtn: '.back-btn',
         itemNameInput: '#item-name',
         itemCalorieInput: '#item-calories',
-        totalCalories: '.total-calories'
+        totalCalories: '.total-calories',
+        updateBtn: '.update-btn',
+        deleteBtn: '.delete-btn',
+        collectionItem: '.collection-item',
+        editItem: '.edit-item'
     };
 
     // Load items on to the list
@@ -164,17 +187,41 @@ const UIController = (function () {
             document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
         },
 
+        // Clearing input from the text input
         clearInput: function () {
             document.querySelector(UISelectors.itemNameInput).value = '';
             document.querySelector(UISelectors.itemCalorieInput).value = '';
         },
 
+        // Hiding list if the list is empty (no items)
         hideList: function() {
             document.querySelector(UISelectors.itemList).style.display = 'none';
         },
 
+        // Adds total calories to the UI
         showTotalCalories: function (totalCalories) {
             document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
+        },
+        
+        clearEditState: function () {
+            UIController.clearInput();
+            document.querySelector(UISelectors.deleteBtn).style.display = 'none';
+            document.querySelector(UISelectors.updateBtn).style.display = 'none';
+            document.querySelector(UISelectors.addBtn).style.display = 'inline';
+            document.querySelector(UISelectors.backBtn).style.display = 'none';
+        },
+
+        addEditSate: function () {
+            UIController.clearInput();
+            document.querySelector(UISelectors.deleteBtn).style.display = 'inline';
+            document.querySelector(UISelectors.updateBtn).style.display = 'inline';
+            document.querySelector(UISelectors.addBtn).style.display = 'none';
+            document.querySelector(UISelectors.backBtn).style.display = 'inline';
+        },
+
+        addEditItemToForm: function () {
+            document.querySelector(UISelectors.itemNameInput).value = ItemController.getCurrentItem().name;
+            document.querySelector(UISelectors.itemCalorieInput).value = ItemController.getCurrentItem().calories;
         }
     }
 })();
@@ -188,6 +235,9 @@ const AppController = (function (ItemController, UIController) {
 
         // Add item event
         document.querySelector(UISelectors.addBtn).addEventListener('click', addItem);
+
+        // Update items (edit state) when pencil clicked
+        document.querySelector(UISelectors.itemList).addEventListener('click', updateItem);
     }
 
     const addItem = function (e) {
@@ -215,11 +265,36 @@ const AppController = (function (ItemController, UIController) {
         }
     }
 
+    const updateItem = function (e) {
+        e.preventDefault();
+        const UISelectors = UIController.getSelectors();
+
+        if (e.target.classList.contains('edit-item')) {
+            console.log('Test');
+
+            let id = e.target.parentNode.parentNode.id;
+            idArr = id.split('-');
+            id = parseInt(idArr[1]);
+            
+            const itemToEdit = ItemController.getItemById(id);
+            console.log(itemToEdit);
+
+            if (itemToEdit !== null) {
+                ItemController.setCurrentItem(itemToEdit);
+                UIController.addEditSate();
+                UIController.addEditItemToForm();
+            }
+        }
+    }
+
     return {
         // Initialize the App Module
         init: function () {
             console.log('Initializing App..');
             
+            // Clear edit state
+            UIController.clearEditState();
+
             // Get all items from the data structure
             const data = ItemController.getItems();
 
