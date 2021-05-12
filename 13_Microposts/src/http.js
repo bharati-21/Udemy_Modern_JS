@@ -12,9 +12,7 @@ class EasyHTTP {
     // Make an HTTP GET Request
     async get(url) {
         const response = await fetch(url);
-
         const resData = await response.json();
-
         return resData;
     }
 
@@ -48,13 +46,13 @@ class EasyHTTP {
 
     // Make a HTTP Delete Request
     async delete(url) {
-        fetch(url, {
+        console.log(url);
+        await fetch(url, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+            }
+        });
         
         const resData = await 'Resource Deleted';
         return resData;

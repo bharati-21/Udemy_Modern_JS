@@ -17,8 +17,8 @@ class UI {
                     <div class="card-body">
                         <h4 class="card-title">${post.title}</h4>
                         <p class="card-text">${post.body}</p>
-                        <a href="#" class="edit card-link" data-id=${post.id}><i class="fas fa-pencil-alt"></i></a>
-                        <a href="#" class="delete card-link" data-id=${post.id}><i class="fas fa-times"></i></a>
+                        <a href="#" class="edit-post card-link" data-id=${post.id}><i class="fas fa-pencil-alt"></i></a>
+                        <a href="#" class="delete-post card-link" data-id=${post.id}><i class="fas fa-times"></i></a>
                     </div>
                 </div>
             `;
@@ -47,6 +47,50 @@ class UI {
         if (currentAlert) {
             currentAlert.remove();
         }
+    }
+
+    clearFields() {
+        this.titleInput.value = '';
+        this.bodyInput.value = '';
+    }
+
+    fillForm(data) {
+        this.titleInput.value = data.title;
+        this.bodyInput.value = data.body;
+        this.idInput.value = data.id;
+
+        this.changeFormState('edit');
+    }
+
+    changeFormState(state) {
+        if (state === 'edit') {
+            this.postSubmit.textContent = 'Update Post';
+            this.postSubmit.className = 'post-submit btn btn-warning btn-block mb-2';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'cancel-edit btn btn-dark btn-block mb-4';
+            cancelBtn.appendChild(document.createTextNode('Cancel Edit'));
+
+            const cardForm = document.querySelector('.card-form');
+            const formEnd = document.querySelector('.form-end');
+            cardForm.insertBefore(cancelBtn, formEnd);
+
+        } else {
+            this.postSubmit.className = 'post-submit btn btn-primary btn-block';
+            this.postSubmit.textContent = 'Post It';
+
+            const cancel = document.querySelector('.cancel-edit');
+            if (cancel) {
+                cancel.remove();
+
+                this.clearIdInput();
+                this.clearFields();
+            }
+        }
+    }
+
+    clearIdInput() {
+        this.idInput.value = '';
     }
 
     clearFields() {
